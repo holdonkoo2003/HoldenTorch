@@ -1,5 +1,6 @@
 package com.example.holdentorch;
 
+import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.app.Activity;
@@ -15,6 +16,9 @@ public class MainActivity extends Activity {
 
 	Camera.Parameters p;
 
+	boolean hasCamera = getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -27,24 +31,33 @@ public class MainActivity extends Activity {
 		flash_button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 
+				if (hasCamera == true) {
 
-				if (p.getFlashMode().equals(android.hardware.Camera.Parameters.FLASH_MODE_OFF)) {
-
-
-					Toast.makeText(getApplicationContext(), p.getFlashMode().toString(), Toast.LENGTH_SHORT).show();
-					p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-					cam.setParameters(p);
-					cam.startPreview();
-
-					Toast.makeText(getApplicationContext(), p.getFlashMode().toString(), Toast.LENGTH_SHORT).show();
+					if (p.getFlashMode().equals(android.hardware.Camera.Parameters.FLASH_MODE_OFF)) {
 
 
-				} else if (p.getFlashMode().equals(android.hardware.Camera.Parameters.FLASH_MODE_TORCH)) {
-					p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-					cam.setParameters(p);
-					cam.startPreview();
+						Toast.makeText(getApplicationContext(), p.getFlashMode().toString(), Toast.LENGTH_SHORT).show();
+						p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+						cam.setParameters(p);
+						cam.startPreview();
+
+						Toast.makeText(getApplicationContext(), p.getFlashMode().toString(), Toast.LENGTH_SHORT).show();
+
+
+					} else if (p.getFlashMode().equals(android.hardware.Camera.Parameters.FLASH_MODE_TORCH)) {
+						p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+						cam.setParameters(p);
+						cam.startPreview();
+
+					}
 
 				}
+				else {
+					Toast.makeText(getApplicationContext(), "sorry no camera", Toast.LENGTH_SHORT).show();
+					finish();
+				}
+
+
 			}
 		});
 	}
